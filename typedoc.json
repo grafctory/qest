@@ -13,7 +13,6 @@
       "Identifier": "https://metreeca.github.io/core/types/index.Identifier.html",
       "Optional": "https://metreeca.github.io/core/types/index.Optional.html",
       "Guard": "https://metreeca.github.io/core/types/index.Guard.html",
-      "key": "https://metreeca.github.io/core/variables/index.key.html",
       "IRI": "https://metreeca.github.io/core/types/resource.IRI.html",
       "base": "https://metreeca.github.io/core/variables/resource.base.html",
       "internalize": "https://metreeca.github.io/core/functions/resource.internalize.html",
@@ -28,10 +27,7 @@
       "SyntaxError": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError"
     },
     "typescript": {
-      "encodeURIComponent": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent",
-      "Error": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
-      "TypeError": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
-      "SyntaxError": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError"
+      "encodeURIComponent": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent"
     }
   },
   "includeVersion": true,
