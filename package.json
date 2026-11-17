@@ -58,10 +58,10 @@
     "proof": "npx typedoc --watch & ush ws --open docs"
   },
   "dependencies": {
-    "@metreeca/core": "^0.13.0"
+    "@metreeca/core": "^0.14.0"
   },
   "devDependencies": {
-    "@metreeca/rack": "^0.6.0",
+    "@metreeca/rack": "^0.7.0",
     "peggy": "^4.1.3",
     "typedoc": "^0.28.14",
     "typescript": "^5.9.3",

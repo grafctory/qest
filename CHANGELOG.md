@@ -10,16 +10,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Admit locale alternatives in keyed unions outside projections, so a property mixing plain strings and localised text
-  retrieves the plain strings as they stand and the localised text tag by tag; folding now applies to atomics alone
+  retrieves the plain strings as they stand and the localised text tag by tag; atomics keep reading it coalesced
 - Merge union alternatives matching the same variant into one request, retrieved to the depth of the most demanding
   alternative: a template or locale alternative prevails over an atomic one on the variant they share
 - Admit sort and focus expressions matching a grouping key over a multi-valued property, so grouped facet listings
-  keep selected values on top; within focused and unfocused tiers, results follow the regular sort keys
+  keep selected values on top, ahead of the remaining values, each tier ordered by the regular sort keys
+- **Breaking**: Upgrade `@metreeca/core` to `^0.14.0`; projects using Core alongside this package raise their own
+  `@metreeca/core` dependency to `^0.14.0` as well, so that both packages share a single copy of Core
 
 ### Fixed
 
-- Correct the SPARQL realisation of aggregates in the backend appendix: missing and incompatible values are filtered out
-  in a per-group subselect before aggregating, since SPARQL keeps them as errors that void `SUM`, `AVG`, `MIN` and `MAX`
+- Document references and localised values as admitted sort focus targets, in line with the specification
+- Correct the SPARQL realisation of aggregates in the backend appendix: missing and incompatible values are excluded
+  before aggregating, so they no longer void `SUM`, `AVG`, `MIN` and `MAX` results over the remaining values
 
 ## [0.13.0](https://github.com/metreeca/qest/compare/v0.12.1...v0.13.0) - 2026-10-19
 
