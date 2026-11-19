@@ -55,7 +55,7 @@
     "peggy": "npx peggy --dts --format es --allowed-start-rules '*' --output src/model.pegjs.js src/model.pegjs",
     "build": "ush rm dist docs && npm run peggy && tsc -p tsconfig.build.json && ush cp dist 'src/*.pegjs.*' && npx typedoc",
     "check": "npx vitest --typecheck run",
-    "proof": "npx typedoc --watch & ush ws --open docs"
+    "proof": "ush up npx typedoc --watch + ush ws --open docs"
   },
   "dependencies": {
     "@metreeca/core": "^0.14.0"
