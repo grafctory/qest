@@ -20,6 +20,10 @@
  * @see model.ts#criteria-serialisation
  */
 
+{{
+  import { NumberPattern, TagPattern } from "./model.form.js";
+}}
+
 {
 
   const JsonEscapes = {
@@ -27,9 +31,11 @@
     '"': '"', '/': '/', '\\': '\\'
   };
 
-  const TagPattern = /^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{1,8})*$/;  // BCP 47 language tag [RFC5646]
-  const NumberPattern = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
   const IdentifierPattern = /^[_$\p{ID_Start}][$\u200C\u200D\p{ID_Continue}]*$/u;
+
+  // marks a bare * value, kept apart from a quoted "*" string decoding to the same text
+
+  const Wildcard = Symbol("wildcard");
 
 
   function decodeValue(str) {
@@ -162,8 +168,8 @@
       .reduce((groups, [key, value]) => ({
         ...groups,
         [key]: {
-          values: value === "*" ? (groups[key]?.values ?? []) : [...(groups[key]?.values ?? []), value],
-          hasWildcard: value === "*" || (groups[key]?.hasWildcard ?? false)
+          values: value === Wildcard ? (groups[key]?.values ?? []) : [...(groups[key]?.values ?? []), value],
+          hasWildcard: value === Wildcard || (groups[key]?.hasWildcard ?? false)
         }
       }), {});
 
@@ -283,7 +289,7 @@ Pagination
 /// Equality ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 EqualityPair
-  = expr:Expr "=" value:Value { return [expr, value === "*" ? "*" : parseValue(value)]; }
+  = expr:Expr "=" value:Value { return [expr, value === "*" ? Wildcard : parseValue(value)]; }
 
 
 /// Expressions ////////////////////////////////////////////////////////////////////////////////////////////////////////

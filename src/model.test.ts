@@ -2152,7 +2152,7 @@ describe("codecs", () => {
 
 				const encoded = encodeCriteria(criteria, { base: "https://example.com/" });
 
-				expect(encoded).toBe("%3Fvendor=%22%2Fvendors%2Facme%22");
+				expect(encoded).toBe("vendor=/vendors/acme");
 			});
 
 		});
@@ -2161,7 +2161,7 @@ describe("codecs", () => {
 			const criteria = { "?vendor": "base:/vendors/acme" } as Criteria;
 			const encoded = encodeCriteria(criteria);
 
-			expect(encoded).toBe("%3Fvendor=%22%2Fvendors%2Facme%22");
+			expect(encoded).toBe("vendor=/vendors/acme");
 		});
 
 		describe("form format", () => {
@@ -2179,16 +2179,16 @@ describe("codecs", () => {
 					const query = { "?name": "widget" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?name="widget"
-					expect(encoded).toBe("%3Fname=%22widget%22");
+					// name=widget
+					expect(encoded).toBe("name=widget");
 				});
 
 				it("should encode multiple constraints", () => {
 					const query = { "?name": "widget", ">=price": 100 } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?name="widget"&>=price=100
-					expect(encoded).toBe("%3Fname=%22widget%22&%3E%3Dprice=100");
+					// name=widget&price>=100
+					expect(encoded).toBe("name=widget&price%3E=100");
 				});
 
 			});
@@ -2197,9 +2197,9 @@ describe("codecs", () => {
 
 				it.each([
 					["less than", { "<price": 100 }, "%3Cprice=100"],
-					["less than or equal", { "<=price": 100 }, "%3C%3Dprice=100"],
+					["less than or equal", { "<=price": 100 }, "price%3C=100"],
 					["greater than", { ">price": 50 }, "%3Eprice=50"],
-					["greater than or equal", { ">=price": 50 }, "%3E%3Dprice=50"]
+					["greater than or equal", { ">=price": 50 }, "price%3E=50"]
 				] as const)("should encode %s", (_, query, encoded) => {
 					expect(encodeCriteria(query as Criteria)).toBe(encoded);
 				});
@@ -2212,16 +2212,16 @@ describe("codecs", () => {
 					const query = { "~name": "widget" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="widget"  (~ not encoded - unreserved in RFC 3986)
-					expect(encoded).toBe("~name=%22widget%22");
+					// ~name=widget  (~ not encoded - unreserved in RFC 3986)
+					expect(encoded).toBe("~name=widget");
 				});
 
 				it("should encode search with spaces", () => {
 					const query = { "~name": "red widget" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="red widget"
-					expect(encoded).toBe("~name=%22red%20widget%22");
+					// ~name=red widget  (space written as +)
+					expect(encoded).toBe("~name=red+widget");
 				});
 
 			});
@@ -2232,24 +2232,24 @@ describe("codecs", () => {
 					const query = { "?category": "electronics" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?category="electronics"
-					expect(encoded).toBe("%3Fcategory=%22electronics%22");
+					// category=electronics
+					expect(encoded).toBe("category=electronics");
 				});
 
 				it("should encode multiple values as repeated parameters", () => {
 					const query = { "?category": ["electronics", "home"] } as unknown as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?category="electronics"&?category="home"
-					expect(encoded).toBe("%3Fcategory=%22electronics%22&%3Fcategory=%22home%22");
+					// category=electronics&category=home
+					expect(encoded).toBe("category=electronics&category=home");
 				});
 
 				it("should encode null option for undefined matching", () => {
 					const query = { "?vendor": null } as unknown as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?vendor=null
-					expect(encoded).toBe("%3Fvendor=null");
+					// vendor=null
+					expect(encoded).toBe("vendor=null");
 				});
 
 			});
@@ -2260,8 +2260,8 @@ describe("codecs", () => {
 					const query = { "!tags": ["featured", "sale"] } as unknown as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// !tags="featured"&!tags="sale"  (! not encoded - unreserved in RFC 3986)
-					expect(encoded).toBe("!tags=%22featured%22&!tags=%22sale%22");
+					// !tags=featured&!tags=sale  (! not encoded - unreserved in RFC 3986)
+					expect(encoded).toBe("!tags=featured&!tags=sale");
 				});
 
 			});
@@ -2272,16 +2272,16 @@ describe("codecs", () => {
 					const query = { "+category": "electronics" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// +category="electronics"  (+ encoded to %2B — reserved sub-delim)
-					expect(encoded).toBe("%2Bcategory=%22electronics%22");
+					// +category=electronics  (+ encoded to %2B — reserved sub-delim)
+					expect(encoded).toBe("%2Bcategory=electronics");
 				});
 
 				it("should encode multiple focus values", () => {
 					const query = { "+category": ["electronics", "home"] } as unknown as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// +category="electronics"&+category="home"
-					expect(encoded).toBe("%2Bcategory=%22electronics%22&%2Bcategory=%22home%22");
+					// +category=electronics&+category=home
+					expect(encoded).toBe("%2Bcategory=electronics&%2Bcategory=home");
 				});
 
 			});
@@ -2301,9 +2301,9 @@ describe("codecs", () => {
 			describe("pagination", () => {
 
 				it.each([
-					["offset", { "@": 10 }, "%40=10"],
+					["offset", { "@": 10 }, "@=10"],
 					["limit", { "#": 25 }, "%23=25"],
-					["offset and limit together", { "@": 0, "#": 25 }, "%40=0&%23=25"]
+					["offset and limit together", { "@": 0, "#": 25 }, "@=0&%23=25"]
 				] as const)("should encode %s", (_, query, encoded) => {
 					expect(encodeCriteria(query as Criteria)).toBe(encoded);
 				});
@@ -2316,8 +2316,8 @@ describe("codecs", () => {
 					const query = { ">=vendor.rating": 4 } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// >=vendor.rating=4
-					expect(encoded).toBe("%3E%3Dvendor.rating=4");
+					// vendor.rating>=4
+					expect(encoded).toBe("vendor.rating%3E=4");
 				});
 
 			});
@@ -2328,24 +2328,24 @@ describe("codecs", () => {
 					const query = { ">=year:releaseDate": 2020 } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// >=year:releaseDate=2020
-					expect(encoded).toBe("%3E%3Dyear%3AreleaseDate=2020");
+					// year:releaseDate>=2020
+					expect(encoded).toBe("year:releaseDate%3E=2020");
 				});
 
 				it("should encode constraint with transform pipeline", () => {
 					const query = { ">=round:avg:items.price": 100 } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// >=round:avg:items.price=100
-					expect(encoded).toBe("%3E%3Dround%3Aavg%3Aitems.price=100");
+					// round:avg:items.price>=100
+					expect(encoded).toBe("round:avg:items.price%3E=100");
 				});
 
 				it("should encode disjunction with transform", () => {
 					const query: Criteria = { "?month:releaseDate": [1, 6, 12] };
 					const encoded = encodeCriteria(query);
 
-					// ?month:releaseDate=1&?month:releaseDate=6&?month:releaseDate=12
-					expect(encoded).toBe("%3Fmonth%3AreleaseDate=1&%3Fmonth%3AreleaseDate=6&%3Fmonth%3AreleaseDate=12");
+					// month:releaseDate=1&month:releaseDate=6&month:releaseDate=12
+					expect(encoded).toBe("month:releaseDate=1&month:releaseDate=6&month:releaseDate=12");
 				});
 
 				it("should encode ordering with transform", () => {
@@ -2353,7 +2353,7 @@ describe("codecs", () => {
 					const encoded = encodeCriteria(query);
 
 					// ^year:releaseDate=1
-					expect(encoded).toBe("%5Eyear%3AreleaseDate=1");
+					expect(encoded).toBe("%5Eyear:releaseDate=1");
 				});
 
 			});
@@ -2361,8 +2361,8 @@ describe("codecs", () => {
 			describe("boolean values", () => {
 
 				it.each([
-					["true value", { "?available": true }, "%3Favailable=true"],
-					["false value", { "?available": false }, "%3Favailable=false"]
+					["true value", { "?available": true }, "available=true"],
+					["false value", { "?available": false }, "available=false"]
 				] as const)("should encode %s", (_, query, encoded) => {
 					expect(encodeCriteria(query as Criteria)).toBe(encoded);
 				});
@@ -2372,12 +2372,12 @@ describe("codecs", () => {
 			describe("numeric values", () => {
 
 				it.each([
-					["zero", { "@": 0 }, "%40=0"],
-					["positive integer", { ">=price": 100 }, "%3E%3Dprice=100"],
-					["negative integer", { ">=balance": -50 }, "%3E%3Dbalance=-50"],
-					["decimal", { ">=price": 99.99 }, "%3E%3Dprice=99.99"],
+					["zero", { "@": 0 }, "@=0"],
+					["positive integer", { ">=price": 100 }, "price%3E=100"],
+					["negative integer", { ">=balance": -50 }, "balance%3E=-50"],
+					["decimal", { ">=price": 99.99 }, "price%3E=99.99"],
 					// scientific notation: + encoded as %2B to avoid space interpretation
-					["scientific notation", { ">=count": 1.5e21 }, "%3E%3Dcount=1.5e%2B21"]
+					["scientific notation", { ">=count": 1.5e21 }, "count%3E=1.5e%2B21"]
 				] as const)("should encode %s", (_, query, encoded) => {
 					expect(encodeCriteria(query as Criteria)).toBe(encoded);
 				});
@@ -2390,88 +2390,88 @@ describe("codecs", () => {
 					const query = { "~name": "" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name=""
-					expect(encoded).toBe("~name=%22%22");
+					// ~name=
+					expect(encoded).toBe("~name=");
 				});
 
 				it("should encode simple string", () => {
 					const query = { "~name": "widget" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="widget"
-					expect(encoded).toBe("~name=%22widget%22");
+					// ~name=widget
+					expect(encoded).toBe("~name=widget");
 				});
 
 				it("should encode string with spaces", () => {
 					const query = { "~name": "my widget" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="my widget"
-					expect(encoded).toBe("~name=%22my%20widget%22");
+					// ~name=my widget
+					expect(encoded).toBe("~name=my+widget");
 				});
 
 				it("should encode string with quotes", () => {
 					const query = { "~name": "say \"hello\"" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="say \"hello\""  (inner quotes escaped as \")
-					expect(encoded).toBe("~name=%22say%20%5C%22hello%5C%22%22");
+					// ~name=say "hello"  (inner quotes left unescaped in a bare string)
+					expect(encoded).toBe("~name=say+%22hello%22");
 				});
 
 				it("should encode unicode characters", () => {
 					const query = { "~name": "café" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="café"  (é encoded as UTF-8 bytes %C3%A9)
-					expect(encoded).toBe("~name=%22caf%C3%A9%22");
+					// ~name=café  (non-ASCII text left literal)
+					expect(encoded).toBe("~name=café");
 				});
 
 				it("should encode newlines", () => {
 					const query = { "~description": "line1\nline2" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~description="line1\nline2"
-					expect(encoded).toBe("~description=%22line1%0Aline2%22");
+					// ~description=line1\nline2
+					expect(encoded).toBe("~description=line1%0Aline2");
 				});
 
 				it("should encode tabs", () => {
 					const query = { "~description": "col1\tcol2" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~description="col1\tcol2"
-					expect(encoded).toBe("~description=%22col1%09col2%22");
+					// ~description=col1\tcol2
+					expect(encoded).toBe("~description=col1%09col2");
 				});
 
 				it("should encode ampersand", () => {
 					const query = { "~name": "foo&bar" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="foo&bar"  (& encoded to avoid parameter separator)
-					expect(encoded).toBe("~name=%22foo%26bar%22");
+					// ~name=foo&bar  (& encoded to avoid parameter separator)
+					expect(encoded).toBe("~name=foo%26bar");
 				});
 
 				it("should encode equals sign", () => {
 					const query = { "~name": "a=b" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="a=b"  (= encoded to avoid key/value separator)
-					expect(encoded).toBe("~name=%22a%3Db%22");
+					// ~name=a=b  (= left literal: only the first = separates key and value)
+					expect(encoded).toBe("~name=a=b");
 				});
 
 				it("should encode plus sign", () => {
 					const query = { "~name": "a+b" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="a+b"  (+ encoded to avoid space interpretation)
-					expect(encoded).toBe("~name=%22a%2Bb%22");
+					// ~name=a+b  (+ encoded to avoid space interpretation)
+					expect(encoded).toBe("~name=a%2Bb");
 				});
 
 				it("should encode percent sign", () => {
 					const query = { "~name": "100%" } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ~name="100%"  (% encoded to avoid escape sequence)
-					expect(encoded).toBe("~name=%22100%25%22");
+					// ~name=100%  (% encoded to avoid escape sequence)
+					expect(encoded).toBe("~name=100%25");
 				});
 
 			});
@@ -2482,24 +2482,24 @@ describe("codecs", () => {
 					const query = { "?name": { "en": "Widget" } } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?name="Widget"@en
-					expect(encoded).toBe("%3Fname=%22Widget%22%40en");
+					// name=Widget@en
+					expect(encoded).toBe("name=Widget@en");
 				});
 
 				it("should encode multiple tagged strings", () => {
 					const query = { "?name": { "en": "Widget", "fr": "Gadget" } } as Criteria;
 					const encoded = encodeCriteria(query);
 
-					// ?name="Widget"@en&?name="Gadget"@fr
-					expect(encoded).toBe("%3Fname=%22Widget%22%40en&%3Fname=%22Gadget%22%40fr");
+					// name=Widget@en&name=Gadget@fr
+					expect(encoded).toBe("name=Widget@en&name=Gadget@fr");
 				});
 
 				it("should encode localised text map with multi-value tags", () => {
 					const query: Criteria = { "?name": { "en": ["Widget", "Gadget"], "fr": ["Bidule"] } };
 					const encoded = encodeCriteria(query);
 
-					// ?name="Widget"@en&?name="Gadget"@en&?name="Bidule"@fr
-					expect(encoded).toBe("%3Fname=%22Widget%22%40en&%3Fname=%22Gadget%22%40en&%3Fname=%22Bidule%22%40fr");
+					// name=Widget@en&name=Gadget@en&name=Bidule@fr
+					expect(encoded).toBe("name=Widget@en&name=Gadget@en&name=Bidule@fr");
 				});
 
 			});
@@ -2538,6 +2538,212 @@ describe("codecs", () => {
 					const decoded = decodeCriteria(encoded);
 
 					expect(decoded).toEqual(query);
+				});
+
+			});
+
+			describe("string quoting", () => {
+
+				describe("strings decoding as something else when bare", () => {
+
+					it.each<[string, string, string]>([
+						["boolean true", "true", "%22true%22"],
+						["boolean false", "false", "%22false%22"],
+						["null", "null", "%22null%22"],
+						["integer", "123", "%22123%22"],
+						["negative decimal", "-1.5", "%22-1.5%22"],
+						["exponent", "1e3", "%221e3%22"],
+						["signed exponent", "1.5e+21", "%221.5e%2B21%22"],
+						["quoted text", "\"x\"", "%22%5C%22x%5C%22%22"],
+						["lone double quote", "\"", "%22%5C%22%22"],
+						["trailing tag-like suffix", "user@example", "%22user@example%22"],
+						["trailing language tag", "a@en", "%22a@en%22"],
+						["trailing subtagged language tag", "a@en-GB", "%22a@en-GB%22"],
+						["wildcard", "*", "%22*%22"]
+					])("should quote %s", async (_, value, encoded) => {
+						const criteria: Criteria = { "?code": value };
+
+						expect(encodeCriteria(criteria)).toBe(`code=${encoded}`);
+						expect(decodeCriteria(encodeCriteria(criteria))).toEqual(criteria);
+					});
+
+				});
+
+				describe("strings decoding as themselves when bare", () => {
+
+					it.each<[string, string, string]>([
+						["empty string", "", ""],
+						["plain word", "widget", "widget"],
+						["zero-padded digits", "007", "007"],
+						["number-like prefix", "1.", "1."],
+						["email address", "user@example.com", "user@example.com"],
+						["trailing at sign", "user@", "user@"],
+						["non-tag suffix", "a@1x", "a@1x"],
+						["leading double quote", "\"x", "%22x"],
+						["trailing double quote", "x\"", "x%22"],
+						["inner double quotes", "say \"hello\"", "say+%22hello%22"],
+						["wildcard within text", "a*", "a*"]
+					])("should write %s bare", async (_, value, encoded) => {
+						const criteria: Criteria = { "?code": value };
+
+						expect(encodeCriteria(criteria)).toBe(`code=${encoded}`);
+						expect(decodeCriteria(encodeCriteria(criteria))).toEqual(criteria);
+					});
+
+					it("should write internal IRIs bare", async () => {
+						const criteria: Criteria = { "?university": "https://example.com/universities/coimbra" };
+						const encoded = encodeCriteria(criteria, { base: "https://example.com/" });
+
+						expect(encoded).toBe("university=/universities/coimbra");
+						expect(decodeCriteria(encoded, { base: "https://example.com/" })).toEqual(criteria);
+					});
+
+				});
+
+				describe("value and string distinction", () => {
+
+					it.each<[string, Criteria, string]>([
+						["number", { "?price": 123 }, "price=123"],
+						["numeric string", { "?code": "123" }, "code=%22123%22"],
+						["boolean", { "?flag": true }, "flag=true"],
+						["boolean string", { "?flag": "true" }, "flag=%22true%22"],
+						["null", { "?vendor": null }, "vendor=null"],
+						["null string", { "?vendor": "null" }, "vendor=%22null%22"]
+					])("should keep %s apart", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+						expect(decodeCriteria(encoded)).toEqual(criteria);
+					});
+
+				});
+
+				describe("tagged strings", () => {
+
+					it.each<[string, Criteria, string]>([
+						["plain text", { "?label": { "en": ["text"] } }, "label=text@en"],
+						["text with a tag-like suffix", { "?label": { "en": ["user@example"] } }, "label=%22user@example%22@en"],
+						["numeric text", { "?label": { "en": ["123"] } }, "label=%22123%22@en"],
+						["boolean text", { "?label": { "en": ["true"] } }, "label=%22true%22@en"],
+						["empty text", { "?label": { "en": [""] } }, "label=@en"]
+					])("should encode %s", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+						expect(decodeCriteria(encoded)).toEqual(criteria);
+					});
+
+				});
+
+			});
+
+			describe("escaping", () => {
+
+				describe("characters valid in a query and inert in form encoding", () => {
+
+					it.each<[string, string]>([
+						["slash", "a/b"],
+						["question mark", "a?b"],
+						["colon", "a:b"],
+						["at sign", "a@b.c"],
+						["equals sign", "a=b"],
+						["apostrophe", "O'Brien"],
+						["parentheses", "(a)"],
+						["comma and semicolon", "a,b;c"],
+						["dollar sign", "$a"],
+						["exclamation mark and tilde", "a!~b"],
+						["non-ASCII text", "café"]
+					])("should leave %s literal", async (_, value) => {
+						const criteria: Criteria = { "?code": value };
+
+						expect(encodeCriteria(criteria)).toBe(`code=${value}`);
+						expect(decodeCriteria(encodeCriteria(criteria))).toEqual(criteria);
+					});
+
+				});
+
+				describe("characters invalid in a query or meaningful in form encoding", () => {
+
+					it.each<[string, string, string]>([
+						["space", "a b", "a+b"],
+						["ampersand", "a&b", "a%26b"],
+						["plus sign", "a+b", "a%2Bb"],
+						["percent sign", "a%b", "a%25b"],
+						["hash", "a#b", "a%23b"],
+						["angle brackets", "<a>", "%3Ca%3E"],
+						["square brackets", "[a]", "%5Ba%5D"],
+						["curly braces", "{a}", "%7Ba%7D"],
+						["backslash", "a\\b", "a%5Cb"],
+						["caret", "a^b", "a%5Eb"],
+						["backtick", "a`b", "a%60b"],
+						["vertical bar", "a|b", "a%7Cb"],
+						["C0 control", "a\u0001b", "a%01b"],
+						["delete", "a\u007Fb", "a%7Fb"],
+						["C1 control", "a\u0085b", "a%C2%85b"]
+					])("should escape %s", async (_, value, encoded) => {
+						const criteria: Criteria = { "?code": value };
+
+						expect(encodeCriteria(criteria)).toBe(`code=${encoded}`);
+						expect(decodeCriteria(encodeCriteria(criteria))).toEqual(criteria);
+					});
+
+				});
+
+				describe("keys", () => {
+
+					it.each<[string, Criteria, string]>([
+						["equals sign", { ">=": 1 }, "%3E%3D=1"],
+						["plus sign", { "+tag": "a" }, "%2Btag=a"],
+						["hash", { "#": 1 }, "%23=1"],
+						["caret", { "^price": 1 }, "%5Eprice=1"]
+					])("should escape %s", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+					});
+
+					it.each<[string, Criteria, string]>([
+						["exclamation mark", { "!tag": "a" }, "!tag=a"],
+						["at sign", { "@": 1 }, "@=1"],
+						["colon and dot", { "!year:item.date": 1 }, "!year:item.date=1"]
+					])("should leave %s literal", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+					});
+
+				});
+
+				describe("inclusive comparison operators", () => {
+
+					it.each<[string, Criteria, string]>([
+						["less than or equal", { "<=price": 100 }, "price%3C=100"],
+						["greater than or equal", { ">=startDate": "2026-11-18T23:00:00.000Z" }, "startDate%3E=2026-11-18T23:00:00.000Z"],
+						["a transformed path", { ">=year:item.date": 2020 }, "year:item.date%3E=2020"]
+					])("should write %s in postfix form", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+						expect(decodeCriteria(encoded)).toEqual(criteria);
+					});
+
+					it.each<[string, Criteria, string]>([
+						["less than or equal", { "<=": 1 }, "%3C%3D=1"],
+						["greater than or equal", { ">=": 1 }, "%3E%3D=1"]
+					])("should keep %s in prefix form on the empty expression", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+						expect(decodeCriteria(encoded)).toEqual(criteria);
+					});
+
+				});
+
+				describe("any-match operator", () => {
+
+					it.each<[string, Criteria, string]>([
+						["a property", { "?tag": "a" }, "tag=a"],
+						["a transformed path", { "?year:item.date": 1 }, "year:item.date=1"]
+					])("should omit the operator on %s", async (_, criteria, encoded) => {
+						expect(encodeCriteria(criteria)).toBe(encoded);
+						expect(decodeCriteria(encoded)).toEqual(criteria);
+					});
+
+					it("should keep the operator on the empty expression", async () => {
+						const criteria: Criteria = { "?": "a" };
+
+						expect(encodeCriteria(criteria)).toBe("?=a");
+						expect(decodeCriteria(encodeCriteria(criteria))).toEqual(criteria);
+					});
+
 				});
 
 			});

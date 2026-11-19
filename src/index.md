@@ -771,21 +771,25 @@ transform      = identifier
 identifier     = <ECMAScript IdentifierName, [ECMA-262], Section 12.7>
 ```
 
-The form-urlencoded shorthand serialises the grammar above as `label=value` pairs, where labels are the prefixed
-criterion keys (Section 5.7). This is a convenience for readable URLs, covering the common constraints rather than the
-full retrieval model grammar; criteria it cannot express are carried in the JSON template form instead. The shorthand
-observes the following rules:
+The form-urlencoded shorthand serialises the grammar above as `label=value` pairs, labelled by the criterion keys
+(Section 5.7) or their infix forms. This is a convenience for readable URLs, covering the common constraints rather
+than the full retrieval model grammar; criteria it cannot express are carried in the JSON template form instead, and
+the shorthand observes the following rules, which bind encoders and decoders alike:
 
 - An option-set operator (`?`, `!`, `+`) MAY be repeated, collecting its values into a set; any other operator MUST be
   rejected if repeated.
 - Within an option set, plain options and tagged (localised) values MUST NOT be mixed; a mixed set MUST be rejected.
-- The prefixed key is **canonical**; the infix forms are readable shorthands for it: `expression=value` for
-  `?expression=value`, and `expression<=value` / `expression>=value` for `<=expression` / `>=expression`. Strict `<`
-  and `>` are prefixed-only.
-- Operator characters stay literal when query-safe in [RFC3986] and inert in form-urlencoding (`~`, `?`, `!`, `@`); the
-  rest are percent-encoded (`^` `%5E`, `<` `%3C`, `>` `%3E`, `#` `%23`, and `+` `%2B`, which form-urlencoding would
-  otherwise decode as a space), as are the reserved value characters `&`, `=`, `+`, `%`; this encoding is for transport
-  safety only, and a decoder SHOULD parse leniently, accepting them unencoded too.
+- The prefixed key is **canonical**, except for the `?`, `<=`, and `>=` operators, whose canonical forms are the
+  infix `expression=value`, `expression<=value`, and `expression>=value`, keeping the operator's own `=` out of the
+  label. On the empty expression, encoders MUST write these operators prefixed, as a bare `=value` leaves the pair
+  without a label and `<=value` / `>=value` read as strict comparisons. Decoders MUST accept the prefixed forms too.
+  The strict `<` and `>` operators have no infix form and are always written prefixed.
+- Encoders percent-encode only controls, space, and the characters [RFC3986] excludes from a query (`"`, `#`, `<`,
+  `>`, `[`, `\`, `]`, `^`, `` ` ``, `{`, `|`, and `}`), which strict servers reject unencoded, plus the characters
+  form-urlencoding reads as syntax (`&`, `+`, and `%`, and `=` in labels), writing a space as `+`. All other
+  characters, including the operators `~`, `?`, `!`, and `@`, SHOULD stay literal, keeping shared URLs readable.
+  This encoding is for transport safety only: a decoder SHOULD parse leniently, accepting the escaped characters
+  unencoded too, since hand-written URLs and lenient user agents often carry them that way.
 
 The example below filters items where `category` is "electronics" or "home", `name` contains "widget", `price` is
 between 50 and 150 inclusive, sorts by `price` ascending, and returns the first 25 items (label operators shown in

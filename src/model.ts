@@ -392,9 +392,9 @@
  *
  * The format encodes queries as `label=value` pairs where:
  *
- * - Labels use the same prefixed operator syntax as {@link Criteria} constraint keys
+ * - Labels use the same operator syntax as {@link Criteria} constraint keys, or the postfix aliases below
  * - Each pair carries a single value; repeated labels are merged into arrays where accepted
- * - Postfix aliases provide natural form syntax for some operators:
+ * - Postfix aliases give some operators a natural form syntax, and are the forms the encoder writes:
  *   - `expression=value` for `?expression=value` (disjunctive matching)
  *   - `expression<=value` for `<=expression=value` (less than or equal)
  *   - `expression>=value` for `>=expression=value` (greater than or equal)
@@ -411,16 +411,20 @@
  *
  * - {@link Reference}s are serialised as strings
  * - A string may carry a single `@tag` suffix, lifting it into a one-entry {@link Dictionary}
- *   (for example, `"text"@en` decodes to `{ en: "text" }`)
- * - The encoder always produces double-quoted strings; the decoder accepts unquoted strings as a shorthand
+ *   (for example, `text@en` decodes to `{ en: "text" }`, and `"user@example"@en` to `{ en: "user@example" }`)
+ * - Strings are written bare, unless the bare text would read as another value: a boolean, `null`, a number, a
+ *   quoted or tagged string, or the `*` wildcard. Such strings are written as double-quoted JSON strings
  *
  * **Encoding notes:**
  *
- * - Some operator characters are unreserved in RFC 3986 and remain unencoded: `~` (like), `!` (all)
- * - Reserved characters in values are percent-encoded: `&` (separator), `=` (key/value), `+` (space), `%` (escape)
+ * - Characters a URL query can carry and form encoding leaves inert stay literal: operators such as `!` and `~`,
+ *   and values such as `/universities/coimbra`, `user@example.com` or non-ASCII text
+ * - Spaces are written as `+`, and `&`, `+`, `%`, `#`, characters invalid in URLs (such as `<`, `>` and `^`) and `=`
+ *   in keys are percent-encoded, so `price>=50` is written as `price%3E=50` and `^price=1` as `%5Eprice=1`
  *
  * > [!WARNING]
- * > Numeric-looking values like `123` are parsed as numbers unless double-quoted.
+ * > Bare text that reads as a number, a boolean or `null` decodes as that value, not as a string: hand-written
+ * > URLs must double-quote such strings (for example, `code="123"` or `flag="true"`).
  *
  * ```text
  * category=electronics
@@ -453,6 +457,7 @@ import { base as baseNamespace, getNamespaceIRI, internalize, isIRI, resolve } f
 import { immutable } from "@metreeca/core/values";
 import { type DecoderOpts, type EncoderOpts } from "./index.js";
 import { isAtomic, isCriteria, isProbe, isTemplate } from "./model.core.js";
+import { isBare } from "./model.form.js";
 import * as CriteriaParser from "./model.pegjs.js";
 import { Dictionary, type Literal, type Reference, Resource } from "./state.js";
 
@@ -1456,14 +1461,18 @@ export function decodeTemplate(encoded: string, {
  * > [!NOTE]
  * > The encoder always produces canonical form:
  * >
- * > - Operators use prefix notation (for example, `>=price=100`)
- * > - String values are JSON double-quoted (for example, `name="widget"`)
+ * > - Operators use prefix notation (for example, `~name=widget`), except for the postfix aliases: disjunctive
+ * >   matching omits its `?` (`category=home`), and `<=` and `>=` follow the expression (`price>=100`)
+ * > - The empty expression keeps the prefix notation (for example, `?=value`, `>==100`), which is unambiguous there
+ * > - String values are written bare (for example, `name=widget`)
+ * > - Strings that would read back as another value are JSON double-quoted (for example, `code="123"`,
+ * >   `flag="true"`, `email="user@example"`)
  * > - Numbers, booleans, and `null` remain unquoted (JSON literals)
  * > - Sorting criteria are always numeric (for example, `^price=1`, `^name=-2`)
- * > - A {@link Dictionary} entry is flattened using a single postfix `@tag` suffix (for example, `"text"@en`)
+ * > - A {@link Dictionary} entry is flattened using a single postfix `@tag` suffix (for example, `text@en`)
  * >
- * > This ensures consistent, predictable output. The decoder accepts both canonical and shorthand forms (for example,
- * > postfix operators like `price>=100`, unquoted strings like `name=widget`).
+ * > This ensures consistent, predictable output. The decoder also accepts prefix operators (`>=price=100`), an
+ * > explicit `?` (`?name=widget`) and redundant quotes (`name="widget"`), so older or hand-written URLs still decode.
  *
  * > [!WARNING]
  * > The codec treats the `@tag` suffix as an opaque key and assigns it no semantic meaning. Consumers are
@@ -1481,7 +1490,7 @@ export function decodeTemplate(encoded: string, {
  *
  * ```typescript
  * encodeCriteria({ "~name": "widget", ">=price": 50, "^price": 1, "#": 25 });
- * // → '~name=%22widget%22&%3E%3Dprice=50&%5Eprice=1&%23=25'
+ * // → '~name=widget&price%3E=50&%5Eprice=1&%23=25'
  * ```
  */
 export function encodeCriteria(criteria: Criteria, {
@@ -1507,7 +1516,7 @@ export function encodeCriteria(criteria: Criteria, {
 
 	function encodeFormEntry(key: string, value: unknown): string[] {
 
-		const encodedKey = encodeURIComponent(key);
+		const encodedKey = escapeForm(encodeFormLabel(key), /[\x00-\x20\x7F-\x9F"#%&+<=>[\\\]^`{|}]/g);
 
 		return value === null ? [`${encodedKey}=null`]
 			: isArray(value) ? value.flatMap(v => encodeFormEntry(key, v))
@@ -1516,27 +1525,44 @@ export function encodeCriteria(criteria: Criteria, {
 
 	}
 
+	function encodeFormLabel(key: string): string {
+
+		// shorthand labels keep the operator's own = out of the label, so only the pair separator remains; the
+		// empty expression keeps the prefixed form, as `?` would leave a nameless pair and `<=`/`>=` read as `<`/`>`
+
+		return /^\?./.test(key) ? key.slice(1)
+			: /^[<>]=./.test(key) ? `${key.slice(2)}${key[0]}`
+				: key;
+
+	}
+
 	function encodeFormDictionary(encodedKey: string, dict: Record<string, unknown>): string[] {
 
 		// localised text map: flatten each tag as a single postfix @tag suffix
 
 		return Object.entries(dict).flatMap(([tag, value]) =>
-			isArray(value) ? value.map(v => `${encodedKey}=${encodeFormValue(v)}%40${tag}`)
-				: [`${encodedKey}=${encodeFormValue(value)}%40${tag}`]
+			isArray(value) ? value.map(v => `${encodedKey}=${encodeFormValue(v)}@${tag}`)
+				: [`${encodedKey}=${encodeFormValue(value)}@${tag}`]
 		);
 
 	}
 
 	function encodeFormValue(value: unknown): string {
 
-		// Strings are double-quoted with inner quotes escaped
-
-		return isString(value)
-			? encodeURIComponent(`"${value
+		return escapeForm(isString(value) && !isBare(value)
+			? `"${value
 				.replace(/\\/g, "\\\\")
 				.replace(/"/g, "\\\"")
-			}"`)
-			: encodeURIComponent(String(value));
+			}"`
+			: String(value), /[\x00-\x20\x7F-\x9F"#%&+<>[\\\]^`{|}]/g);
+
+	}
+
+	function escapeForm(text: string, unsafe: RegExp): string {
+
+		// escape only what a URL query cannot hold or form encoding would read as syntax, keeping URLs readable
+
+		return text.replace(unsafe, char => char === " " ? "+" : encodeURIComponent(char));
 
 	}
 
@@ -1560,14 +1586,14 @@ export function encodeCriteria(criteria: Criteria, {
  * > [!NOTE]
  * > The decoder accepts both canonical and shorthand forms:
  * >
- * > - Prefix operators (canonical): `>=price=100`
- * > - Postfix operators (shorthand): `price>=100`
- * > - Double-quoted strings (canonical): `name="widget"`
- * > - Unquoted strings (shorthand): `name=widget`
+ * > - Prefix operators: `~name=widget`, also accepted for the postfix aliases: `>=price=100`, `?category=home`
+ * > - Postfix aliases (canonical): `price>=100`, `price<=100`, and `category=home` for disjunctive matching
+ * > - Bare strings (canonical): `name=widget`
+ * > - Double-quoted strings: `name="widget"`, and `code="123"` where the bare text would read as another value
  * > - A string value may carry a single postfix `@tag` suffix, lifting it into a one-entry {@link Dictionary}
  * >
- * > Keyed values are always reconstructed in the multi-valued form, since {@link Options} are inherently multi-valued
- * > and scalar/array forms are indistinguishable in form encoding.
+ * > Keyed values are always reconstructed in the multi-valued form: {@link Options} are inherently multi-valued, and
+ * > form encoding cannot tell a scalar from a single-element array, so both decode as an array of values.
  *
  * > [!WARNING]
  * > The codec treats the `@tag` suffix as an opaque key and assigns it no semantic meaning. Consumers are

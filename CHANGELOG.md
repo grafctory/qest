@@ -7,6 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.15.0](https://github.com/metreeca/qest/compare/v0.14.0...HEAD)
 
+### Changed
+
+- **Breaking**: Write criteria string values unquoted wherever the bare text decodes back as the same string, so shared
+  and bookmarked URLs drop the `%22` noise; strings that would read as a boolean, `null`, a number, a quoted or tagged
+  string, or the `*` wildcard stay double-quoted, and URLs already shared in quoted form keep decoding unchanged
+- **Breaking**: Percent-encode criteria only where a URL query or form decoding requires it, so paths, `?`, `@`, `:`
+  and non-ASCII text stay literal and spaces read as `+`; URLs already shared in encoded form keep decoding unchanged
+- **Breaking**: Encode disjunctive matches and inclusive comparisons in their infix forms, so `?university=…` reads
+  `university=…` and `>=startDate=…` reads `startDate>=…`; URLs in the prefixed forms keep decoding unchanged
+
+### Fixed
+
+- Decode a double-quoted `"*"` in `expression=value` criteria as a string rather than as the `*` wildcard
+
 ## [0.14.0](https://github.com/metreeca/qest/compare/v0.13.0...v0.14.0) - 2026-11-17
 
 ### Changed
