@@ -32,9 +32,9 @@ import {
 	isScalar,
 	isString,
 	isUnion
-} from "@metreeca/core";
-import { isTag } from "@metreeca/core/language";
-import { isIRI } from "@metreeca/core/resource";
+} from "@grafctory/core";
+import { isTag } from "@grafctory/core/language";
+import { isIRI } from "@grafctory/core/resource";
 import type { Dictionary, Literal, Reference, Resource, Value, Values } from "./state.js";
 
 

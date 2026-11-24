@@ -28,7 +28,7 @@
  * @module index
  */
 
-import { type IRI } from "@metreeca/core/resource";
+import { type IRI } from "@grafctory/core/resource";
 
 
 /**
@@ -41,7 +41,7 @@ export type EncoderOpts = {
 	 *
 	 * Converts absolute IRIs to internal (root-relative) form.
 	 *
-	 * If omitted, IRIs are internalised against the {@link @metreeca/core!base base} namespace IRI (`base:/#`).
+	 * If omitted, IRIs are internalised against the {@link @grafctory/core!base base} namespace IRI (`base:/#`).
 	 */
 	readonly base?: IRI
 
@@ -68,7 +68,7 @@ export type DecoderOpts = {
 	 *
 	 * Resolves internal IRIs to absolute form.
 	 *
-	 * If omitted, IRIs are resolved against the {@link @metreeca/core!base base} namespace IRI (`base:/#`).
+	 * If omitted, IRIs are resolved against the {@link @grafctory/core!base base} namespace IRI (`base:/#`).
 	 */
 	readonly base?: IRI
 

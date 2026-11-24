@@ -275,10 +275,10 @@
  * @module
  */
 
-import { Identifier, isArray, isObject, type Optional } from "@metreeca/core";
-import { Tag } from "@metreeca/core/language";
-import { base as baseNamespace, getNamespaceIRI, internalize, IRI, isIRI, resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
+import { Identifier, isArray, isObject, type Optional } from "@grafctory/core";
+import { Tag } from "@grafctory/core/language";
+import { base as baseNamespace, getNamespaceIRI, internalize, IRI, isIRI, resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
 import { type DecoderOpts, type EncoderOpts } from "./index.js";
 import { isResource } from "./state.core.js";
 
@@ -389,7 +389,7 @@ export type Literal =
  *
  * > [!NOTE]
  * > A decoded reference is always absolute. In the JSON wire format a reference MAY instead appear in relative form:
- * > decoders resolve it against a known base IRI, by default the {@link @metreeca/core!base base} namespace IRI, and
+ * > decoders resolve it against a known base IRI, by default the {@link @grafctory/core!base base} namespace IRI, and
  * > encoders MAY conversely relativise absolute references against the same base, preferring the root-relative form.
  *
  * @see {@link https://www.w3.org/TR/json-ld11/#node-identifiers JSON-LD 1.1 - Node Identifiers}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { Identifier } from "@metreeca/core";
+import type { Identifier } from "@grafctory/core";
 import { describe, expectTypeOf, test } from "vitest";
 import type { Dictionary, Reference } from "./state.js";
 import type {

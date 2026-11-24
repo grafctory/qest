@@ -35,9 +35,9 @@ import {
 	isString,
 	isUnion as isVariants,
 	type Optional
-} from "@metreeca/core";
-import { isTagRange } from "@metreeca/core/language";
-import { immutable } from "@metreeca/core/values";
+} from "@grafctory/core";
+import { isTagRange } from "@grafctory/core/language";
+import { immutable } from "@grafctory/core/values";
 import type {
 	Aggregate,
 	Atomic,

@@ -1,5 +1,5 @@
 {
-  "name": "@metreeca/qest",
+  "name": "@grafctory/qest",
   "version": "0.15.1",
   "description": "Foundations for client-driven, queryable REST/JSON APIs.",
   "keywords": [
@@ -9,9 +9,9 @@
     "query",
     "api"
   ],
-  "homepage": "https://metreeca.github.io/qest/",
+  "homepage": "https://grafctory.github.io/qest/",
   "bugs": {
-    "url": "https://github.com/metreeca/qest/issues",
+    "url": "https://github.com/grafctory/qest/issues",
     "email": "info@metreeca.com"
   },
   "license": "Apache-2.0",
@@ -22,21 +22,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metreeca/qest.git"
+    "url": "git+https://github.com/grafctory/qest.git"
   },
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
-      "@metreeca/source": "./src/index.ts",
+      "@grafctory/source": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./state": {
-      "@metreeca/source": "./src/state.ts",
+      "@grafctory/source": "./src/state.ts",
       "default": "./dist/state.js"
     },
     "./model": {
-      "@metreeca/source": "./src/model.ts",
+      "@grafctory/source": "./src/model.ts",
       "default": "./dist/model.js"
     }
   },
@@ -58,10 +58,10 @@
     "proof": "ush up npx typedoc --watch + ush ws --open docs"
   },
   "dependencies": {
-    "@metreeca/core": "^0.14.0"
+    "@grafctory/core": "^0.14.0"
   },
   "devDependencies": {
-    "@metreeca/rack": "^0.8.0",
+    "@grafctory/rack": "^0.8.0",
     "peggy": "^4.1.3",
     "typedoc": "^0.28.14",
     "typescript": "^6.0.3",

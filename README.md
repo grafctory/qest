@@ -1,17 +1,17 @@
-# @metreeca/qest
+# @grafctory/qest
 
-[![npm](https://img.shields.io/npm/v/@metreeca/qest)](https://www.npmjs.com/package/@metreeca/qest)
+[![npm](https://img.shields.io/npm/v/@grafctory/qest)](https://www.npmjs.com/package/@grafctory/qest)
 
 Foundations for client-driven, queryable REST/JSON APIs.
 
-**@metreeca/qest** standardises critical capabilities that vanilla REST/JSON APIs typically lack or implement in ad-hoc,
+**@grafctory/qest** standardises critical capabilities that vanilla REST/JSON APIs typically lack or implement in ad-hoc,
 non-portable ways:
 
 - **Client-Driven**: clients specify what they need, retrieving complex envelopes in a single call
 - **Queryable**: advanced filtering and aggregation, supporting faceted search and analytics
 - **Localised Content**: full support for internationalised content with language-tagged dictionaries
 
-Developers seek these features in frameworks like GraphQL; **@metreeca/qest** brings them to REST/JSON, achieving:
+Developers seek these features in frameworks like GraphQL; **@grafctory/qest** brings them to REST/JSON, achieving:
 
 - **Familiar Patterns**: standard REST and JSON conventions, no new paradigms to learn
 - **Simple Clients**: no specialised libraries, preprocessors, or code generators
@@ -23,28 +23,28 @@ For a formal specification of the data model and query protocol, see the
 
 # Ecosystem
 
-**@metreeca/qest** focuses on semantics and core data types, leaving applications free to handle validation, storage,
+**@grafctory/qest** focuses on semantics and core data types, leaving applications free to handle validation, storage,
 and publishing as they see fit; its standardised data model is the foundation of an integrated ecosystem that delivers a
 powerful model-driven stack for rapid development of linked data applications:
 
 | Package                     | Description                                                    |
 |-----------------------------|----------------------------------------------------------------|
-| **@metreeca/qest**          | Foundations for client-driven, queryable REST/JSON APIs        |
-| [**@metreeca/blue**][]      | Declarative blueprints for model-driven linked data processing |
-| [**@metreeca/keep**][]      | Turnkey model-driven storage for linked data resources         |
-| [**@metreeca/gate**][]      | Zero-code model-driven endpoints for linked data resources     |
-| @metreeca/tile _(upcoming)_ | Minimalist model-driven UI toolkit for linked data resources   |
+| **@grafctory/qest**          | Foundations for client-driven, queryable REST/JSON APIs        |
+| [**@grafctory/blue**][]      | Declarative blueprints for model-driven linked data processing |
+| [**@grafctory/keep**][]      | Turnkey model-driven storage for linked data resources         |
+| [**@grafctory/gate**][]      | Zero-code model-driven endpoints for linked data resources     |
+| @grafctory/tile _(upcoming)_ | Minimalist model-driven UI toolkit for linked data resources   |
 
-[**@metreeca/blue**]: https://github.com/metreeca/blue
+[**@grafctory/blue**]: https://github.com/grafctory/blue
 
-[**@metreeca/keep**]: https://github.com/metreeca/keep
+[**@grafctory/keep**]: https://github.com/grafctory/keep
 
-[**@metreeca/gate**]: https://github.com/metreeca/gate
+[**@grafctory/gate**]: https://github.com/grafctory/gate
 
 # Installation
 
 ```shell
-npm install @metreeca/qest
+npm install @grafctory/qest
 ```
 
 > [!WARNING]
@@ -60,17 +60,17 @@ npm install @metreeca/qest
 >
 > | Module                   | Description                      |
 > |--------------------------|----------------------------------|
-> | [@metreeca/qest][]       | Shared options and defaults      |
-> | [@metreeca/qest/state][] | Resource state representation    |
-> | [@metreeca/qest/model][] | Client-driven resource retrieval |
+> | [@grafctory/qest][]       | Shared options and defaults      |
+> | [@grafctory/qest/state][] | Resource state representation    |
+> | [@grafctory/qest/model][] | Client-driven resource retrieval |
 
-[@metreeca/qest]: https://metreeca.github.io/qest/modules/index.html
+[@grafctory/qest]: https://grafctory.github.io/qest/modules/index.html
 
-[@metreeca/qest/state]: https://metreeca.github.io/qest/modules/state.html
+[@grafctory/qest/state]: https://grafctory.github.io/qest/modules/state.html
 
-[@metreeca/qest/model]: https://metreeca.github.io/qest/modules/model.html
+[@grafctory/qest/model]: https://grafctory.github.io/qest/modules/model.html
 
-**@metreeca/qest** types define payload semantics and formats for standard REST operations:
+**@grafctory/qest** types define payload semantics and formats for standard REST operations:
 
 | Method | Type         | Description                      |
 |--------|--------------|----------------------------------|
@@ -81,15 +81,15 @@ npm install @metreeca/qest
 | PUT    | [Resource][] | Complete resource state update   |
 | DELETE | none         | Resource deletion                |
 
-[Resource]: https://metreeca.github.io/qest/types/state.Resource.html
+[Resource]: https://grafctory.github.io/qest/types/state.Resource.html
 
-[Template]: https://metreeca.github.io/qest/types/model.Template.html
+[Template]: https://grafctory.github.io/qest/types/model.Template.html
 
-[Criteria]: https://metreeca.github.io/qest/types/model.Criteria.html
+[Criteria]: https://grafctory.github.io/qest/types/model.Criteria.html
 
-[Projection]: https://metreeca.github.io/qest/types/model.Projection.html
+[Projection]: https://grafctory.github.io/qest/types/model.Projection.html
 
-[Dictionary]: https://metreeca.github.io/qest/types/state.Dictionary.html
+[Dictionary]: https://grafctory.github.io/qest/types/state.Dictionary.html
 
 ## Resources
 
@@ -138,7 +138,7 @@ Client-driven retrieval lets clients specify exactly what data to retrieve from 
 Expansions and nested queries can be arbitrarily deep: no over-fetching of unwanted fields, no under-fetching requiring
 additional calls to resolve linked resources.
 
-This is the core contribution of **@metreeca/qest**: vanilla REST/JSON APIs lack a standard way for clients to control
+This is the core contribution of **@grafctory/qest**: vanilla REST/JSON APIs lack a standard way for clients to control
 retrieval, forcing them to accept fixed server responses or rely on ad-hoc query parameters. Client-driven retrieval
 fills this gap, supporting precise control over responses while remaining fully compatible with standard HTTP caching.
 
@@ -359,7 +359,7 @@ to link resources across systems and domains, and to give property names precise
 them to shared vocabularies, a capability at the heart of the
 [Web Data Activity](https://www.w3.org/2013/data/) (Semantic Web) and modern knowledge graphs.
 
-**@metreeca/qest** defines a controlled JSON-LD subset designed to feel like plain idiomatic JSON, letting JavaScript
+**@grafctory/qest** defines a controlled JSON-LD subset designed to feel like plain idiomatic JSON, letting JavaScript
 developers work with linked data using familiar REST/JSON patterns without mastering JSON-LD technicalities, while
 retaining full compatibility with standard JSON-LD processors.
 
@@ -384,10 +384,10 @@ This controlled subset is specified by:
 
 # Support
 
-- Open an [issue](https://github.com/metreeca/qest/issues) to report a problem or to suggest a new feature
-- Start a [discussion](https://github.com/metreeca/qest/discussions) to ask a how-to question or to share an idea
+- Open an [issue](https://github.com/grafctory/qest/issues) to report a problem or to suggest a new feature
+- Start a [discussion](https://github.com/grafctory/qest/discussions) to ask a how-to question or to share an idea
 
 # License
 
 This project is licensed under the Apache 2.0 License. See
-[LICENSE](https://github.com/metreeca/qest?tab=Apache-2.0-1-ov-file) for details.
+[LICENSE](https://github.com/grafctory/qest?tab=Apache-2.0-1-ov-file) for details.

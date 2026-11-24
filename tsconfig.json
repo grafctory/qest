@@ -10,7 +10,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "customConditions": [
-      "@metreeca/source"
+      "@grafctory/source"
     ]
   },
   "include": [

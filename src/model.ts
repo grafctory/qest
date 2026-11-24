@@ -450,11 +450,11 @@
  * @module
  */
 
-import { error, Identifier, isArray, isIdentifier, isObject, isString, key } from "@metreeca/core";
-import { decodeBase64, encodeBase64 } from "@metreeca/core/base64";
-import { TagRange } from "@metreeca/core/language";
-import { base as baseNamespace, getNamespaceIRI, internalize, isIRI, resolve } from "@metreeca/core/resource";
-import { immutable } from "@metreeca/core/values";
+import { error, Identifier, isArray, isIdentifier, isObject, isString, key } from "@grafctory/core";
+import { decodeBase64, encodeBase64 } from "@grafctory/core/base64";
+import { TagRange } from "@grafctory/core/language";
+import { base as baseNamespace, getNamespaceIRI, internalize, isIRI, resolve } from "@grafctory/core/resource";
+import { immutable } from "@grafctory/core/values";
 import { type DecoderOpts, type EncoderOpts } from "./index.js";
 import { isAtomic, isCriteria, isProbe, isTemplate } from "./model.core.js";
 import { isBare } from "./model.form.js";

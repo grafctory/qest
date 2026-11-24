@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { base, getNamespaceIRI } from "@metreeca/core/resource";
+import { base, getNamespaceIRI } from "@grafctory/core/resource";
 import { describe, expect, it } from "vitest";
 import { isDictionary, isResource, isVacuous, isValue, isValues } from "./state.core.js";
 import { decodeResource, encodeResource, type Resource } from "./state.js";

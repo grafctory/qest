@@ -8,18 +8,18 @@
     "cddl"
   ],
   "externalSymbolLinkMappings": {
-    "@metreeca/core": {
-      "isIdentifier": "https://metreeca.github.io/core/functions/index.isIdentifier.html",
-      "Identifier": "https://metreeca.github.io/core/types/index.Identifier.html",
-      "Optional": "https://metreeca.github.io/core/types/index.Optional.html",
-      "Guard": "https://metreeca.github.io/core/types/index.Guard.html",
-      "IRI": "https://metreeca.github.io/core/types/resource.IRI.html",
-      "base": "https://metreeca.github.io/core/variables/resource.base.html",
-      "internalize": "https://metreeca.github.io/core/functions/resource.internalize.html",
-      "resolve": "https://metreeca.github.io/core/functions/resource.resolve.html",
-      "Tag": "https://metreeca.github.io/core/types/language.Tag.html",
-      "TagRange": "https://metreeca.github.io/core/types/language.TagRange.html",
-      "immutable": "https://metreeca.github.io/core/functions/values.immutable.html"
+    "@grafctory/core": {
+      "isIdentifier": "https://grafctory.github.io/core/functions/index.isIdentifier.html",
+      "Identifier": "https://grafctory.github.io/core/types/index.Identifier.html",
+      "Optional": "https://grafctory.github.io/core/types/index.Optional.html",
+      "Guard": "https://grafctory.github.io/core/types/index.Guard.html",
+      "IRI": "https://grafctory.github.io/core/types/resource.IRI.html",
+      "base": "https://grafctory.github.io/core/variables/resource.base.html",
+      "internalize": "https://grafctory.github.io/core/functions/resource.internalize.html",
+      "resolve": "https://grafctory.github.io/core/functions/resource.resolve.html",
+      "Tag": "https://grafctory.github.io/core/types/language.Tag.html",
+      "TagRange": "https://grafctory.github.io/core/types/language.TagRange.html",
+      "immutable": "https://grafctory.github.io/core/functions/values.immutable.html"
     },
     "global": {
       "Error": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -46,7 +46,7 @@
   "sourceLinkExternal": true,
   "markdownLinkExternal": true,
   "navigationLinks": {
-    "GitHub": "https://github.com/metreeca/qest"
+    "GitHub": "https://github.com/grafctory/qest"
   },
   "githubPages": false,
   "hideGenerator": true,
