@@ -10,13 +10,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/grafctory/qest/compare/v0.15.1...HEAD)
 
-## [0.15.1](https://github.com/metreeca/qest/compare/v0.15.0...v0.15.1) - 2026-11-24
+## [0.15.1](https://github.com/grafctory/qest/compare/v0.15.0...v0.15.1) - 2026-11-24
 
 ### Changed
 
 - Maintenance release with no change to the published API or behaviour
 
-## [0.15.0](https://github.com/metreeca/qest/compare/v0.14.0...v0.15.0) - 2026-11-19
+## [0.15.0](https://github.com/grafctory/qest/compare/v0.14.0...v0.15.0) - 2026-11-19
 
 ### Changed
 
@@ -32,7 +32,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Decode a double-quoted `"*"` in `expression=value` criteria as a string rather than as the `*` wildcard
 
-## [0.14.0](https://github.com/metreeca/qest/compare/v0.13.0...v0.14.0) - 2026-11-17
+## [0.14.0](https://github.com/grafctory/qest/compare/v0.13.0...v0.14.0) - 2026-11-17
 
 ### Changed
 
@@ -51,7 +51,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Correct the SPARQL realisation of aggregates in the backend appendix: missing and incompatible values are excluded
   before aggregating, so they no longer void `SUM`, `AVG`, `MIN` and `MAX` results over the remaining values
 
-## [0.13.0](https://github.com/metreeca/qest/compare/v0.12.1...v0.13.0) - 2026-10-19
+## [0.13.0](https://github.com/grafctory/qest/compare/v0.12.1...v0.13.0) - 2026-10-19
 
 ### Changed
 
@@ -59,7 +59,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   relative references now decode to `base:/` IRIs, and `base:/` IRIs encode to root-relative references
 - Upgrade `@metreeca/core` to `^0.13.0`
 
-## [0.12.1](https://github.com/metreeca/qest/compare/v0.12.0...v0.12.1) - 2026-10-14
+## [0.12.1](https://github.com/grafctory/qest/compare/v0.12.0...v0.12.1) - 2026-10-14
 
 ### Changed
 
@@ -67,7 +67,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Published exports declare the `@metreeca/source` condition, resolving each entry point to its TypeScript source in
   checkouts linked for local development, while registry consumers keep resolving to the compiled `dist` modules
 
-## [0.12.0](https://github.com/metreeca/qest/compare/v0.11.0...v0.12.0) - 2026-10-01
+## [0.12.0](https://github.com/grafctory/qest/compare/v0.11.0...v0.12.0) - 2026-10-01
 
 ### Added
 
@@ -87,7 +87,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Specify how an object alternative of a keyed union reads when the property declares both a text and a nested-resource
   variant: a template where every key is a property declared by a nested-resource variant, a locale otherwise
 
-## [0.11.0](https://github.com/metreeca/qest/compare/v0.10.0...v0.11.0) - 2026-10-01
+## [0.11.0](https://github.com/grafctory/qest/compare/v0.10.0...v0.11.0) - 2026-10-01
 
 ### Added
 
@@ -140,7 +140,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Accept projection bindings with an empty expression (for example, `self=`) in `decodeProbe`, aligning the parser with
   `isBinding` and the specification
 
-## [0.10.0](https://github.com/metreeca/qest/compare/v0.9.2...v0.10.0) - 2026-09-09
+## [0.10.0](https://github.com/grafctory/qest/compare/v0.9.2...v0.10.0) - 2026-09-09
 
 ### Added
 
@@ -215,7 +215,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Reconstruct `Dictionary` objects from tagged form parameters during form decoding
 - Accept plain strings and string arrays as `Dictionary`/`Locales` shorthands for language-neutral values
 
-## [0.9.2](https://github.com/metreeca/qest/releases/tag/v0.9.2) - 2026-02-09
+## [0.9.2](https://github.com/grafctory/qest/releases/tag/v0.9.2) - 2026-02-09
 
 ### Added
 
@@ -252,7 +252,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Remove `@metreeca/type` dependency
 
-## [0.9.1](https://github.com/metreeca/qest/releases/tag/v0.9.1) - 2025-12-10
+## [0.9.1](https://github.com/grafctory/qest/releases/tag/v0.9.1) - 2025-12-10
 
 ### Added
 
