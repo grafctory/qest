@@ -1,11 +1,15 @@
 # @grafctory/qest
 
-[![npm](https://img.shields.io/npm/v/@grafctory/qest)](https://www.npmjs.com/package/@grafctory/qest)
+[![npm][npm-badge]][npm]
+
+[npm-badge]: https://img.shields.io/npm/v/@grafctory/qest
+[npm]: https://www.npmjs.com/package/@grafctory/qest
+[grafctory]: https://github.com/grafctory
 
 Foundations for client-driven, queryable REST/JSON APIs.
 
-**@grafctory/qest** standardises critical capabilities that vanilla REST/JSON APIs typically lack or implement in ad-hoc,
-non-portable ways:
+**@grafctory/qest** is the data model module of the [Grafctory][grafctory] model-driven knowledge graph framework. It
+standardises critical capabilities that vanilla REST/JSON APIs lack or implement in ad-hoc, non-portable ways:
 
 - **Client-Driven**: clients specify what they need, retrieving complex envelopes in a single call
 - **Queryable**: advanced filtering and aggregation, supporting faceted search and analytics
@@ -21,25 +25,12 @@ Developers seek these features in frameworks like GraphQL; **@grafctory/qest** b
 For a formal specification of the data model and query protocol, see the
 [QEST: Queryable REST/JSON APIs](src/index.md) memo.
 
-# Ecosystem
+**@grafctory/qest** focuses on semantics and core data types, leaving validation, storage and publishing to the
+modules built on its data model, such as [@grafctory/blue], [@grafctory/keep] and [@grafctory/gate].
 
-**@grafctory/qest** focuses on semantics and core data types, leaving applications free to handle validation, storage,
-and publishing as they see fit; its standardised data model is the foundation of an integrated ecosystem that delivers a
-powerful model-driven stack for rapid development of linked data applications:
-
-| Package                     | Description                                                    |
-|-----------------------------|----------------------------------------------------------------|
-| **@grafctory/qest**          | Foundations for client-driven, queryable REST/JSON APIs        |
-| [**@grafctory/blue**][]      | Declarative blueprints for model-driven linked data processing |
-| [**@grafctory/keep**][]      | Turnkey model-driven storage for linked data resources         |
-| [**@grafctory/gate**][]      | Zero-code model-driven endpoints for linked data resources     |
-| @grafctory/tile _(upcoming)_ | Minimalist model-driven UI toolkit for linked data resources   |
-
-[**@grafctory/blue**]: https://github.com/grafctory/blue
-
-[**@grafctory/keep**]: https://github.com/grafctory/keep
-
-[**@grafctory/gate**]: https://github.com/grafctory/gate
+[@grafctory/blue]: https://github.com/grafctory/blue
+[@grafctory/keep]: https://github.com/grafctory/keep
+[@grafctory/gate]: https://github.com/grafctory/gate
 
 # Installation
 
@@ -391,3 +382,5 @@ This controlled subset is specified by:
 
 This project is licensed under the Apache 2.0 License. See
 [LICENSE](https://github.com/grafctory/qest?tab=Apache-2.0-1-ov-file) for details.
+
+<sub>Grafctory™ is a trademark of Metreeca srl.</sub>
