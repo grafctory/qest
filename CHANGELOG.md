@@ -8,7 +8,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 > [!NOTE]
 > Published as `@grafctory/qest` from version 0.15.1; earlier versions were published as `@metreeca/qest`.
 
-## [Unreleased](https://github.com/grafctory/qest/compare/v0.15.1...HEAD)
+## [Unreleased](https://github.com/grafctory/qest/compare/v0.15.2...HEAD)
+
+## [0.15.2](https://github.com/grafctory/qest/compare/v0.15.1...v0.15.2) - 2026-11-26
+
+### Changed
+
+- README introduces the package as part of the Grafctory framework, and bug reports by email go to `info@grafctory.dev`
 
 ## [0.15.1](https://github.com/grafctory/qest/compare/v0.15.0...v0.15.1) - 2026-11-24
 
